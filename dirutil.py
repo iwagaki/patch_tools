@@ -15,7 +15,7 @@ class DirUtil:
     def popd():
         os.chdir(DirUtil.dir_list.pop())
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     DirUtil.pushd('/')
     print os.getcwd()
     DirUtil.popd()

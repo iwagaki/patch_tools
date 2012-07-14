@@ -27,5 +27,5 @@ class ProcessUtil:
             args['stdout'] = output_file
         return subprocess.call(cmd, **args)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     print ProcessUtil.get_output(' '.join(sys.argv[1:]))

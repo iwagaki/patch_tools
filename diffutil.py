@@ -28,7 +28,7 @@ class DiffUtil:
         os.mkfifo(fifo_dst)
 
         try:
-            proc = subprocess.Popen("diff " + fifo_src + ' ' + fifo_dst, shell = True, stdout = subprocess.PIPE)
+            proc = subprocess.Popen('diff ' + fifo_src + ' ' + fifo_dst, shell = True, stdout = subprocess.PIPE)
             DiffUtil.write_file(fifo_src, src.encode('utf-8'))
             DiffUtil.write_file(fifo_dst, dst.encode('utf-8'))
             stdout = proc.communicate()[0].decode('utf-8')
@@ -38,5 +38,5 @@ class DiffUtil:
 
         return stdout
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     print DiffUtil.get_diff('abc\n', 'def\n')
