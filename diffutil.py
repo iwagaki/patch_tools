@@ -24,10 +24,10 @@ class DiffUtil:
         pid = str(os.getpid())
         fifo_src = '/tmp/src.' + pid
         fifo_dst = '/tmp/dst.' + pid
+        os.mkfifo(fifo_src)
+        os.mkfifo(fifo_dst)
 
         try:
-            os.mkfifo(fifo_src)
-            os.mkfifo(fifo_dst)
             proc = subprocess.Popen("diff " + fifo_src + ' ' + fifo_dst, shell = True, stdout = subprocess.PIPE)
             DiffUtil.write_file(fifo_src, src.encode('utf-8'))
             DiffUtil.write_file(fifo_dst, dst.encode('utf-8'))
