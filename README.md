@@ -1,2 +1,6 @@
-patch_tools
+Patch tools
 ===========
+
+License
+-------
+- MIT License
