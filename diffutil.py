@@ -6,13 +6,6 @@ import sys
 import tempfile
 import subprocess
 
-def _write_file(path, src):
-    f = open(path, 'w')
-    try:
-        f.write(src)
-    finally:
-        f.close()
-
 def get_diff_lines(src, dst):
     return get_diff(src, dst).splitlines()
 
@@ -33,6 +26,13 @@ def get_diff(src, dst, cmd = 'diff', pipe = ''):
         os.unlink(fifo_dst)
 
     return stdout
+
+def _write_file(path, src):
+    f = open(path, 'w')
+    try:
+        f.write(src)
+    finally:
+        f.close()
 
 if __name__ == '__main__':
     print get_diff('abc\n', 'def\n')
