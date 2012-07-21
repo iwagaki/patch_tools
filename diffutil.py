@@ -6,7 +6,7 @@ import sys
 import tempfile
 import subprocess
 
-def write_file(path, src):
+def _write_file(path, src):
     f = open(path, 'w')
     try:
         f.write(src)
@@ -25,8 +25,8 @@ def get_diff(src, dst, cmd = 'diff', pipe = ''):
 
     try:
         proc = subprocess.Popen(cmd + ' ' + fifo_src + ' ' + fifo_dst + ' ' + pipe, shell = True, stdout = subprocess.PIPE)
-        write_file(fifo_src, src.encode('utf-8'))
-        write_file(fifo_dst, dst.encode('utf-8'))
+        _write_file(fifo_src, src.encode('utf-8'))
+        _write_file(fifo_dst, dst.encode('utf-8'))
         stdout = proc.communicate()[0].decode('utf-8')
     finally:
         os.unlink(fifo_src)
