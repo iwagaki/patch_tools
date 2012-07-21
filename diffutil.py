@@ -16,7 +16,7 @@ def write_file(path, src):
 def get_diff_lines(src, dst):
     return get_diff(src, dst).splitlines()
 
-def get_diff(src, dst):
+def get_diff(src, dst, cmd = 'diff', pipe = ''):
     pid = str(os.getpid())
     fifo_src = '/tmp/src.' + pid
     fifo_dst = '/tmp/dst.' + pid
@@ -24,7 +24,7 @@ def get_diff(src, dst):
     os.mkfifo(fifo_dst)
 
     try:
-        proc = subprocess.Popen('diff ' + fifo_src + ' ' + fifo_dst, shell = True, stdout = subprocess.PIPE)
+        proc = subprocess.Popen(cmd + ' ' + fifo_src + ' ' + fifo_dst + ' ' + pipe, shell = True, stdout = subprocess.PIPE)
         write_file(fifo_src, src.encode('utf-8'))
         write_file(fifo_dst, dst.encode('utf-8'))
         stdout = proc.communicate()[0].decode('utf-8')
