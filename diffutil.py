@@ -3,7 +3,6 @@
 
 import os
 import sys
-import tempfile
 import subprocess
 
 def get_diff_lines(src, dst):
