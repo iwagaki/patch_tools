@@ -11,7 +11,7 @@ import diffutil
 
 def create_format_patch_without_header(sha1):
     lines = get_format_patch(sha1)
-    file = ''
+    patch = ''
     is_chunk_body = False
 
     for line in lines:
@@ -24,14 +24,14 @@ def create_format_patch_without_header(sha1):
             is_chunk_body = False
 
         if not is_chunk_body:
-            file += line + '\n'
+            patch += line + '\n'
 
         m = re.match("^\+\+\+ b/(.+)$", line);
         if m:
             is_chunk_body = True
-            file += get_git_diff_without_comment(sha1, m.group(1))
+            patch += get_git_diff_without_comment(sha1, m.group(1))
 
-    return file
+    return patch
 
 def git_cherry_pick_without_header(sha1):
     patch = create_format_patch_without_header(sha1)
