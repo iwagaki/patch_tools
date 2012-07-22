@@ -8,7 +8,12 @@ import traceback
 
 def get_output(cmd):
     proc = subprocess.Popen(cmd, shell = True, stdout = subprocess.PIPE)
-    stdout = proc.communicate()[0].decode('utf-8')
+    try:
+        stdout = proc.communicate()[0].decode('utf-8')
+    except UnicodeDecodeError:
+        print 'Error: UnicodeDecodeError'
+        stdout = ''
+
     if not proc.returncode == 0:
         print 'Waring: return code = ' + str(proc.returncode)
         traceback.print_stack()
