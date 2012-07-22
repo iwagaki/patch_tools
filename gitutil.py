@@ -35,6 +35,8 @@ def create_format_patch_without_header(sha1):
 
 def git_cherry_pick_without_header(sha1):
     patch = create_format_patch_without_header(sha1)
+    if patch == '':
+        return -1
 
     pid = str(os.getpid())
     fifo_patch = '/tmp/patch.' + pid
