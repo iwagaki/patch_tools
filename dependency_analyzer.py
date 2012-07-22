@@ -76,7 +76,7 @@ def main():
         count += 1
 
         print '[' + str(count) + '/' + str(total) + '] independent: ' + str(independent_count) + ' dependent: ' + str(dependent_count)
-                    
+
     print domain_list
 
     for k, v in sorted(depth_map.items(), key=lambda x:x[1]):
