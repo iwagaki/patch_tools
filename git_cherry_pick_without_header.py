@@ -24,13 +24,13 @@ def main():
     success = 0
     success_wo_header = 0
     fail = 0
+    error = 0
 
     for row in rows:
         sha1 = row[1]
         title = row[2]
 
-#        result = processutil.run('git cherry-pick ' + sha1)
-        result = 1
+        result = processutil.run('git cherry-pick ' + sha1)
         if result == 0:
             status = 'OK'
             success += 1
@@ -42,6 +42,10 @@ def main():
                 if result == 0:
                     status = 'OK'
                     success_wo_header += 1
+                elif result == -1:
+                    processutil.run('git am --abort')
+                    status = 'ERR'
+                    error += 1
                 else:
                     processutil.run('git am --abort')
                     status = 'NG'
@@ -51,7 +55,7 @@ def main():
                 fail += 1
 
         count += 1
-        print '[' + status + '] [' + str(count) + '/' + str(total) + '] [Succeed:' + str(success) + ' Success(w/o header):' + str(success_wo_header) + ' Failed:' + str(fail) + '] ' + sha1 + ': ' + title
+        print '[' + status + '] [' + str(count) + '/' + str(total) + '] [Succeed:' + str(success) + ' Success(w/o header):' + str(success_wo_header) + ' Failed:' + str(fail) + ' Error:' + str(error) + '] ' + sha1 + ': ' + title
 
 if __name__ == '__main__':
     main()
