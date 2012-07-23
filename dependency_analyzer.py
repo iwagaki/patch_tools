@@ -41,6 +41,7 @@ def main():
             m = re.match("^\-\-\- a\/(.*)", line);
             if m:
                 path = m.group(1)
+                max_path = path
                 print path
 
             m = re.match("@@ \-(\d+),(\d+) \+(\d+),(\d+) @@", line);
@@ -59,20 +60,22 @@ def main():
                         if domain in target_domains:
                             on_target_domains = True
                             if depth_map.has_key(base_sha1):
-                                depth = max(depth, depth_map[base_sha1] + 1)
-                                print 'base_sha1 = ' + base_sha1 + ', depth = ' + str(depth)
+                                if depth < depth_map[base_sha1][0] + 1:
+                                    depth = depth_map[base_sha1][0] + 1
+                                    max_path = path
+                                    print 'base_sha1 = ' + base_sha1 + ', depth = ' + str(depth)
                             else:
                                 print 'Error: cannot find base_sha1 ' + base_sha1
 
                         domain_list[domain] = 1
 
+        depth_map[sha1] = [depth, max_path]
         if on_target_domains:
             dependent_count += 1
         else:
             independent_count += 1
 
-        depth_map[sha1] = depth
-        print sha1 + ': depth = '+ str(depth) + ', size = ' + str(len(depth_map))
+        print sha1 + ': depth = '+ str(depth) + ', path = ' + path + ', size = ' + str(len(depth_map))
         count += 1
 
         print '[' + str(count) + '/' + str(total) + '] independent: ' + str(independent_count) + ' dependent: ' + str(dependent_count)
@@ -80,8 +83,8 @@ def main():
     print domain_list
 
     f = open('result.csv', 'w')
-    for k, v in sorted(depth_map.items(), key=lambda x:x[1]):
-        f.write(k + ',' + str(v) + '\n')
+    for k, v in sorted(depth_map.items(), key=lambda x:x[1][0]):
+        print k + ',' + str(v[0]) + ',' + v[1]
     f.close()
 
 if __name__ == '__main__':
