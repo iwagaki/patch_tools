@@ -5,6 +5,7 @@ import re
 import os
 import sys
 import subprocess
+import time
 
 import processutil
 import diffutil
@@ -85,6 +86,43 @@ def get_file(sha1, path):
 
 def get_format_patch(sha1):
     return processutil.get_output_lines('git format-patch --stdout ' + sha1 + '^..' + sha1)
+
+def get_author_email(sha1):
+    return processutil.get_output_lines('git log -1 --pretty="%ae" ' + sha1)[0]
+
+def get_author_date(sha1):
+    return processutil.get_output_lines('git log -1 --pretty="%ai" ' + sha1)[0]
+
+def get_committer_email(sha1):
+    return processutil.get_output_lines('git log -1 --pretty="%ce" ' + sha1)[0]
+
+def get_committer_date(sha1):
+    return processutil.get_output_lines('git log -1 --pretty="%ci" ' + sha1)[0]
+
+def get_committer_domain(sha1):
+    email = processutil.get_output_lines('git log -1 --pretty="%ce" ' + sha1)[0]
+    m = re.match("[\w\-_\.]+@([\w\-_\.]+)", email)
+    if not m:
+        print 'Error: cannot find a domain: ' + email
+        cleanup_and_abort()
+
+    return m.group(1)
+
+def get_committer_year(sha1):
+    unix_time = int(processutil.get_output_lines('git log -1 --pretty="%ct" ' + sha1)[0])
+    return time.gmtime(unix_time).tm_year
+
+def get_cherrypick_origin(sha1):
+    lines = processutil.get_output_lines('git log -1 ' + sha1)
+
+    origin_list = []
+
+    for line in lines:
+        m = re.match("\s*\(cherry(?:\s+)?(?:-)?pick(?:ed)?\s+from:?(?:\s+commit)?:?\s+([0-9a-f]+)\s*\)", line, re.IGNORECASE);
+        if m:
+            origin_list.append(m.group(1))
+
+    return origin_list
 
 def _write_file(path, src):
     f = open(path, 'w')
