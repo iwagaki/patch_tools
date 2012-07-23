@@ -79,8 +79,10 @@ def main():
 
     print domain_list
 
+    f = open('result.csv', 'w')
     for k, v in sorted(depth_map.items(), key=lambda x:x[1]):
-        print k + ',' + str(v)
+        f.write(k + ',' + str(v) + '\n')
+    f.close()
 
 if __name__ == '__main__':
     main()
